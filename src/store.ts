@@ -4,7 +4,7 @@ import { DedicateFrom, DraftDedicateFrom } from "./types";
 
 type LetterState = {
   letters: DedicateFrom[];
-  addLetter: (data: DraftDedicateFrom) => void;
+  addName: (data: DraftDedicateFrom) => void;
   deleteLetter: (id: DedicateFrom["id"]) => void;
 };
 
@@ -17,7 +17,7 @@ export const useLetterStore = create<LetterState>()(
     persist(
       (set) => ({
         letters: [],
-        addLetter: (data) => {
+        addName: (data) => {
           const newLetter = createLetter(data);
           set((state) => ({
             letters: [...state.letters, newLetter],

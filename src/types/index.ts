@@ -1,8 +1,7 @@
 export type DedicateFrom = {
     id: string;
     name: string;
-    contentinside: string
-    toWho: string
+    city: string
 }
 
 export type DraftDedicateFrom = Omit<DedicateFrom, 'id'>

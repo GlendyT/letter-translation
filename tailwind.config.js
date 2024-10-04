@@ -5,7 +5,14 @@ export default {
     "./src/**/*.{js,ts,jsx,tsx}",
   ],
   theme: {
-    extend: {},
+    extend: {
+      backgroundImage: {
+        bghobiDesktop: "url('/src/assets/hobis_discharge_2_app_bg_desktop.webp')"
+      },
+      fontFamily: {
+        providence: ["Fuzzy Bubbles", "sans-serif"],
+      }
+    },
   },
   plugins: [],
 }
