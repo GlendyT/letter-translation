@@ -1,4 +1,4 @@
-import { useLetterStore } from "../../store";
+//import { useLetterStore } from "../../store";
 import { DedicateFrom } from "../../types";
 
 type LetterDetailProps = {
@@ -7,15 +7,18 @@ type LetterDetailProps = {
 
 
 export const LetterInside = ({ letter }: LetterDetailProps) => {
-  const deleteLetter = useLetterStore((state) => state.deleteLetter);
+  const {name, city} = letter
+
+  console.log(name)
+  console.log(city)
+
 
   return (
     <>
       <div>{letter.name}</div>
-      <div>{letter.toWho}</div>
-      <div>{letter.contentinside}</div>
+      <div>{letter.city}</div>
 
-      <button onClick={() => deleteLetter(letter.id)}>Restart</button>
+
     </>
   );
 };
