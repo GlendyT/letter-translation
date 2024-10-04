@@ -7,8 +7,10 @@ export const Results = () => {
   const canvasRef = useRef(null);
 
   useEffect(() => {
-    const canvas = canvasRef.current;
+    const canvas = canvasRef.current as HTMLCanvasElement | null;
+    if (!canvas) return;
     const context = canvas.getContext("2d");
+    if (!context) return;
     const image = new Image();
     image.src = card;
 
