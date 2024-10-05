@@ -1,41 +1,43 @@
 import { useLetterStore } from "../store";
-import card from "../assets/hobis_discharge_1_square_ver.webp";
 import { useEffect, useRef } from "react";
-//import { LetterInside } from "./Letterinside/LetterInside"
 
 export const Results = () => {
-  const canvasRef = useRef(null);
+  const { letters, deleteLetter } = useLetterStore();
+  const canvasRef = useRef<HTMLCanvasElement | null>(null);
 
   useEffect(() => {
-    const canvas = canvasRef.current as HTMLCanvasElement | null;
+    const canvas = canvasRef.current;
     if (!canvas) return;
     const context = canvas.getContext("2d");
     if (!context) return;
-    const image = new Image();
-    image.src = card;
 
-    image.onload = () => {
-      const maxWidth = window.innerWidth < 640 ? 350 : 500;
-      const scale = maxWidth / image.width;
-      const imageWidth = image.width * scale;
-      const imageHeight = image.height * scale;
+    const maxWidth = window.innerWidth < 640 ? 350 : 500;
+    const pixelRatio = window.devicePixelRatio || 1;
 
-      const pixelRatio = window.devicePixelRatio || 1;
+    context.clearRect(0, 0, canvas.width, canvas.height);
 
-      canvas.width = imageWidth * pixelRatio;
-      canvas.height = imageHeight * pixelRatio;
+    letters.forEach((letter) => {
+      letter.photo.forEach((photoSrc) => {
+        const image = new Image();
+        image.src = photoSrc;
+        image.onload = () => {
+          const scale = maxWidth / image.width;
+          const imageWidth = image.width * scale;
+          const imageHeight = image.height * scale;
 
-      canvas.style.width = `${imageWidth}px`;
-      canvas.style.height = `${imageHeight}px`;
+          canvas.width = imageWidth * pixelRatio;
+          canvas.height = imageHeight * pixelRatio;
 
-      context.setTransform(pixelRatio, 0, 0, pixelRatio, 0, 0);
+          canvas.style.width = `${imageWidth}px`;
+          canvas.style.height = `${imageHeight}px`;
 
-      context.drawImage(image, 0, 0, imageWidth, imageHeight);
-    };
-  }, []);
+          context.setTransform(pixelRatio, 0, 0, pixelRatio, 0, 0);
+          context.drawImage(image, 0, 0, imageWidth, imageHeight);
+        };
+      });
+    });
+  }, [letters]);
 
-  const letters = useLetterStore((state) => state.letters);
-  const deleteLetter = useLetterStore((state) => state.deleteLetter);
   return (
     <>
       <div className="relative flex justify-center items-center max-sm:text-xs">
@@ -52,9 +54,9 @@ export const Results = () => {
           ))}
         </div>
       </div>
-      <div className="flex flex-row gap-2">
+      <>
         {letters.map((delet) => (
-          <div key={delet.id}>
+          <div key={delet.id} className="flex flex-row gap-2 pt-2">
             <button
               onClick={() => deleteLetter(delet.id)}
               className=" bg-black text-white cursor-pointer p-3 font-providence uppercase disabled:bg-opacity-25 disabled:cursor-not-allowed transition-colors rounded-xl"
@@ -62,14 +64,14 @@ export const Results = () => {
               Other
             </button>
             <button
-              //onClick={handleDownloadImage}
+              // onClick={handleDownloadImage} // Optionally add image download logic
               className=" bg-black text-white cursor-pointer p-3 font-providence uppercase disabled:bg-opacity-25 disabled:cursor-not-allowed transition-colors rounded-xl"
             >
               Share
             </button>
           </div>
         ))}
-      </div>
+      </>
     </>
   );
 };

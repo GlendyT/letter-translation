@@ -1,22 +1,32 @@
-type ShowModalProps = {
-  hasSubmitted: boolean;
-  setShowModal: (value: boolean) => void;
-  generateWordDisplay: () => string;
-  handleSubmit: (e: React.FormEvent<HTMLFormElement>) => void;
-  isCorrectGuess: boolean;
-  setInput: (value: string) => void;
-  input: string;
-};
+import { useLetterStore } from "../store";
 
-export const ShowModal = ({
-  hasSubmitted,
-  setShowModal,
-  generateWordDisplay,
-  handleSubmit,
-  isCorrectGuess,
-  setInput,
-  input,
-}: ShowModalProps) => {
+export const ShowModal = () => {
+  const {
+    currWord,
+    input,
+    isCorrectGuess,
+    hasSubmitted,
+    setInput,
+    setIsCorrectGuess,
+    setHasSubmitted,
+    setShowModal,
+  } = useLetterStore();
+
+  const generateWordDisplay = () => {
+    return isCorrectGuess ? currWord : "_".repeat(currWord.length).trim();
+  };
+
+  const handleSubmit = (e: { preventDefault: () => void }) => {
+    e.preventDefault();
+    if (!input) {
+      return;
+    }
+    const guessedWord = input.toLowerCase();
+    setIsCorrectGuess(guessedWord === currWord.toLowerCase());
+    setHasSubmitted(true);
+    setInput("");
+  };
+
   return (
     <>
       <div className="justify-center items-center flex fixed inset-10 z-40 ">
@@ -27,7 +37,7 @@ export const ShowModal = ({
             </div>
             <div className="relative p-2 flex-auto">
               <p className="my-4 font-providence text-lg leading-relaxed">
-                I´m your hope, you are my hope, I am j-
+                I´m your hope, you are my hope, I´m j-
                 {generateWordDisplay()}
               </p>
             </div>
