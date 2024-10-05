@@ -1,9 +1,11 @@
+import { useDownload } from "../hooks/useDownload";
 import { useLetterStore } from "../store";
 import { useEffect, useRef } from "react";
 
 export const Results = () => {
   const { letters, deleteLetter } = useLetterStore();
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
+  const { handleDownloadImage } = useDownload();
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -64,7 +66,7 @@ export const Results = () => {
               Other
             </button>
             <button
-              // onClick={handleDownloadImage} // Optionally add image download logic
+              onClick={handleDownloadImage} // Optionally add image download logic
               className=" bg-black text-white cursor-pointer p-3 font-providence uppercase disabled:bg-opacity-25 disabled:cursor-not-allowed transition-colors rounded-xl"
             >
               Share
