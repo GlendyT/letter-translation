@@ -4,13 +4,14 @@ import { useLetterStore } from "../store";
 import { ChangeEvent, useState } from "react";
 import ver1 from "../assets/hobis_discharge_1_square_ver.webp";
 import ver2 from "../assets/hobis_discharge_2_square_ver.webp";
+import { CardSelector } from "./CardSelector";
 
 export const Form = () => {
   const [charCount, setCharCount] = useState(0);
   const [charCountFrom, setCharCountFrom] = useState(0);
   const maxCharLimit = 21;
   const maxFromLimit = 13;
-  const [selectedPhoto, setSelectedPhoto] = useState<string | null>(null);
+  const [selectedPhoto, setSelectedPhoto] = useState<string>("");
 
   const handleTextArea = (e: ChangeEvent<HTMLInputElement>) => {
     setCharCount(e.target.value.length);
@@ -34,7 +35,7 @@ export const Form = () => {
   const registerData = (data: DraftDedicateFrom) => {
     addName({ ...data, photo: selectedPhoto ? [selectedPhoto] : [] });
     reset();
-    setSelectedPhoto(null); 
+    setSelectedPhoto("");
   };
 
   return (
@@ -90,44 +91,12 @@ export const Form = () => {
             {errors.city && (
               <p className="text-red-600 font-bold">{errors.city.message}</p>
             )}
-
-            <div className="flex flex-col items-center justify-center text-black font-extrabold">
-              <label className="pt-4">Select your Card</label>
-              <div className="py-2 flex flex-row justify-between max-sm:text-xs ">
-                <label className="px-4 py-2 flex flex-row gap-4 cursor-pointer items-center justify-center">
-                  <input
-                    type="radio"
-                    value={ver1}
-                    checked={selectedPhoto === ver1}
-                    onChange={() => setSelectedPhoto(ver1)}
-                    className="hidden"
-                  />
-                  <span
-                    className={`w-8 h-8 object-cover rounded ${
-                      selectedPhoto === ver1 ? "ring-4 bg-black" : "bg-gray-400"
-                    }`}
-                  ></span>
-                  1
-                </label>
-
-                <label className="px-4 py-2 flex flex-row gap-4 cursor-pointer items-center justify-center">
-                  <input
-                    type="radio"
-                    value={ver2}
-                    checked={selectedPhoto === ver2}
-                    onChange={() => setSelectedPhoto(ver2)}
-                    className="hidden"
-                  />
-                  <span
-                    className={`w-8 h-8 object-cover rounded ${
-                      selectedPhoto === ver2 ? "ring-4 bg-black" : "bg-gray-400"
-                    }`}
-                  ></span>
-                  2
-                </label>
-              </div>
-            </div>
-
+            <CardSelector
+              ver1={ver1}
+              ver2={ver2}
+              selectedPhoto={selectedPhoto}
+              setSelectedPhoto={setSelectedPhoto}
+            />
             <button
               id="btn"
               type="submit"
