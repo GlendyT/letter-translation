@@ -1,28 +1,37 @@
 import { useForm } from "react-hook-form";
 import { DraftDedicateFrom } from "../types";
 import { useLetterStore } from "../store";
-import { ChangeEvent, useState } from "react";
-import ver1 from "../assets/hobis_discharge_1_square_ver.webp";
-import ver2 from "../assets/hobis_discharge_2_square_ver.webp";
+import ver1D from "../assets/hobis_discharge_hobis_discharge_1_square_ver.webp";
+import ver2D from "../assets/hobis_discharge_2_square_ver.webp";
+import ver1P from "../assets/hobis_discharge_1_vertical_ver.webp";
+import ver2P from "../assets/hobis_discharge_2_vertical_ver.webp";
 import { CardSelector } from "./CardSelector";
+import { useUtils } from "../hooks/useUtils";
+
+const CARDDESCKTOP = {
+  ver1D: ver1D,
+  ver2D: ver2D,
+};
+
+const CARDPHONE = {
+  ver1P: ver1P,
+  ver2P: ver2P,
+};
 
 export const Form = () => {
-  const [charCount, setCharCount] = useState(0);
-  const [charCountFrom, setCharCountFrom] = useState(0);
-  const maxCharLimit = 21;
-  const maxFromLimit = 13;
-  const [selectedPhoto, setSelectedPhoto] = useState<string>("");
-
-  const handleTextArea = (e: ChangeEvent<HTMLInputElement>) => {
-    setCharCount(e.target.value.length);
-  };
-
-  const handleTextInput = (e: ChangeEvent<HTMLInputElement>) => {
-    setCharCountFrom(e.target.value.length);
-  };
-
-  const isMaxCharLimitReached = charCount === maxCharLimit;
-  const isMaxFromLimitReached = charCountFrom === maxFromLimit;
+  const {
+    handleTextInput1,
+    handleTextInput2,
+    isMaxCharLimitReached,
+    isMaxFromLimitReached,
+    selectedPhoto,
+    setSelectedPhoto,
+    isMobile,
+    charCount,
+    maxCharLimit,
+    maxFromLimit,
+    charCountFrom,
+  } = useUtils();
 
   const { addName } = useLetterStore();
   const {
@@ -39,36 +48,13 @@ export const Form = () => {
   };
 
   return (
-    <div className="flex flex-col sm:justify-center items-center text-white max-sm:text-xs">
+    <div className="flex flex-col pt-20 justify-center items-center text-white max-sm:text-xs ">
       <div className="relative sm:max-w-sm w-full">
         <div className="relative w-full px-10 py-4 max-sm:px-10 max-sm:py-10">
           <form
             onSubmit={handleSubmit(registerData)}
             className="font-providence"
           >
-            <div
-              className={`text-sm mb-2 float-end ${
-                isMaxCharLimitReached ? "text-red-500" : "text-black"
-              }`}
-            >
-              {isMaxCharLimitReached && (
-                <span className="text-red-500">Too long!</span>
-              )}{" "}
-              {charCount}/20
-            </div>
-            <input
-              placeholder="Your Country or City"
-              maxLength={maxCharLimit}
-              className={`appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline resize-none`}
-              {...register("name", {
-                required: "Content is required",
-              })}
-              onChange={handleTextArea}
-            />
-            {errors.name && (
-              <p className="text-red-600 font-bold">{errors.name.message}</p>
-            )}
-
             <div
               className={`text-sm mb-2 float-end ${
                 isMaxFromLimitReached ? "text-red-500" : "text-black"
@@ -83,17 +69,39 @@ export const Form = () => {
               placeholder="Your Name"
               maxLength={maxFromLimit}
               className={`appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline resize-none`}
-              {...register("city", {
+              {...register("name", {
                 required: "Your name is required",
               })}
-              onChange={handleTextInput}
+              onChange={handleTextInput2}
             />
             {errors.city && (
               <p className="text-red-600 font-bold">{errors.city.message}</p>
             )}
+            <div
+              className={`text-sm mb-2 float-end ${
+                isMaxCharLimitReached ? "text-red-500" : "text-black"
+              }`}
+            >
+              {isMaxCharLimitReached && (
+                <span className="text-red-500">Too long!</span>
+              )}{" "}
+              {charCount}/14
+            </div>
+            <input
+              placeholder="Your Country or City"
+              maxLength={maxCharLimit}
+              className={`appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline resize-none`}
+              {...register("city", {
+                required: "Content is required",
+              })}
+              onChange={handleTextInput1}
+            />
+            {errors.name && (
+              <p className="text-red-600 font-bold">{errors.name.message}</p>
+            )}
             <CardSelector
-              ver1={ver1}
-              ver2={ver2}
+              ver1D={isMobile ? CARDPHONE.ver1P : CARDDESCKTOP.ver1D}
+              ver2D={isMobile ? CARDPHONE.ver2P : CARDDESCKTOP.ver2D}
               selectedPhoto={selectedPhoto}
               setSelectedPhoto={setSelectedPhoto}
             />
