@@ -3,11 +3,14 @@ import { App } from "./App";
 import "./index.css";
 import { DownloadProvider } from "./context/DownloadProvider";
 import React from "react";
+import { UtilsProvider } from "./context/UtilsProvider";
 
 createRoot(document.getElementById("root")!).render(
   <React.StrictMode>
-    <DownloadProvider>
-      <App />
-    </DownloadProvider>
+    <UtilsProvider>
+      <DownloadProvider>
+        <App />
+      </DownloadProvider>
+    </UtilsProvider>
   </React.StrictMode>
 );

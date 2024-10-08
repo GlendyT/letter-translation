@@ -41,11 +41,11 @@ export const useLetterStore = create<LetterState>()(
         deleteLetter: (id) => {
           set((state) => ({
             letters: state.letters.filter((letter) => letter.id !== id),
-            currWord: "hope",
-            input: "",
-            isCorrectGuess: false,
-            hasSubmitted: false,
-            showModal: true,
+            // currWord: "hope",
+            // input: "",
+            // isCorrectGuess: false,
+            // hasSubmitted: false,
+            // showModal: true,
           }));
         },
         setInput: (value) => set({ input: value }),

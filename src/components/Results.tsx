@@ -1,44 +1,11 @@
 import { useDownload } from "../hooks/useDownload";
+import { useUtils } from "../hooks/useUtils";
 import { useLetterStore } from "../store";
-import { useEffect, useRef } from "react";
 
 export const Results = () => {
   const { letters, deleteLetter } = useLetterStore();
-  const canvasRef = useRef<HTMLCanvasElement | null>(null);
   const { handleDownloadImage } = useDownload();
-
-  useEffect(() => {
-    const canvas = canvasRef.current;
-    if (!canvas) return;
-    const context = canvas.getContext("2d");
-    if (!context) return;
-
-    const maxWidth = window.innerWidth < 640 ? 350 : 500;
-    const pixelRatio = window.devicePixelRatio || 1;
-
-    context.clearRect(0, 0, canvas.width, canvas.height);
-
-    letters.forEach((letter) => {
-      letter.photo.forEach((photoSrc) => {
-        const image = new Image();
-        image.src = photoSrc;
-        image.onload = () => {
-          const scale = maxWidth / image.width;
-          const imageWidth = image.width * scale;
-          const imageHeight = image.height * scale;
-
-          canvas.width = imageWidth * pixelRatio;
-          canvas.height = imageHeight * pixelRatio;
-
-          canvas.style.width = `${imageWidth}px`;
-          canvas.style.height = `${imageHeight}px`;
-
-          context.setTransform(pixelRatio, 0, 0, pixelRatio, 0, 0);
-          context.drawImage(image, 0, 0, imageWidth, imageHeight);
-        };
-      });
-    });
-  }, [letters]);
+  const { canvasRef, isMobile } = useUtils();
 
   return (
     <>
@@ -48,10 +15,14 @@ export const Results = () => {
           {letters.map((letter) => (
             <div
               key={letter.id}
-              className="absolute inset-0 flex flex-col justify-center items-center py-4 text-black text-center font-bold font-providence"
+              className={`absolute inset-0 flex flex-col  text-black font-extrabold font-providence items-center justify-end shadow-2xl ${
+                isMobile ? "  pb-20 " : "  pb-14"
+              }`}
             >
-              <div className="text-xl px-14 max-sm:text-xs">{letter.name}</div>
-              <div className="text-lg mt-2 max-sm:text-xs">- {letter.city}</div>
+              <div className="text-xl px-14 max-sm:text-md">{letter.name}</div>
+              <div className="text-xl px-14 max-sm:text-md">
+                from {letter.city}
+              </div>
             </div>
           ))}
         </div>
