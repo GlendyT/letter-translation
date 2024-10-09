@@ -9,6 +9,7 @@ import {
   useState,
 } from "react";
 import { useLetterStore } from "../store";
+import { CARDDESCKTOP, CARDPHONE } from "../utils/utils";
 
 type UtilsContextType = {
   handleTextInput1: (e: ChangeEvent<HTMLInputElement>) => void;
@@ -23,7 +24,8 @@ type UtilsContextType = {
   charCountFrom: number;
   maxCharLimit: number;
   maxFromLimit: number;
-  canvasRef: React.MutableRefObject<HTMLCanvasElement | null>
+  canvasRef: React.MutableRefObject<HTMLCanvasElement | null>;
+  getTextColor: (photo: string[]) => void
 };
 
 type UtilsProviderProps = {
@@ -100,6 +102,18 @@ export const UtilsProvider = ({ children }: UtilsProviderProps) => {
     });
   }, [letters]);
 
+  //TODO: UTILS TO USE IN RESULT TO CHANGE THE TEXT COLOR
+  const getTextColor = (photo: string[]) => {
+    if (photo.includes(CARDPHONE.ver1P) || photo.includes(CARDDESCKTOP.ver1D)) {
+      return "text-[#7167e6]";
+    } else if (
+      photo.includes(CARDPHONE.ver2P) ||
+      photo.includes(CARDDESCKTOP.ver2D)
+    )
+      return "text-[rgb(188,79,77)]";
+  };
+
+
   return (
     <UtilsContext.Provider
       value={{
@@ -116,6 +130,7 @@ export const UtilsProvider = ({ children }: UtilsProviderProps) => {
         maxFromLimit,
         charCountFrom,
         canvasRef,
+        getTextColor
       }}
     >
       {children}

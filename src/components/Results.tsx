@@ -5,7 +5,7 @@ import { useLetterStore } from "../store";
 export const Results = () => {
   const { letters, deleteLetter } = useLetterStore();
   const { handleDownloadImage } = useDownload();
-  const { canvasRef, isMobile } = useUtils();
+  const { canvasRef, isMobile, getTextColor } = useUtils();
 
   return (
     <>
@@ -15,12 +15,22 @@ export const Results = () => {
           {letters.map((letter) => (
             <div
               key={letter.id}
-              className={`absolute inset-0 flex flex-col  text-black font-extrabold font-providence items-center justify-end shadow-2xl ${
-                isMobile ? "  pb-20 " : "  pb-14"
+              className={`absolute inset-0 flex flex-col font-extrabold font-providence items-center justify-end shadow-2xl ${
+                isMobile ? "pb-20" : "pb-14"
               }`}
             >
-              <div className="text-xl px-14 max-sm:text-md">{letter.name}</div>
-              <div className="text-xl px-14 max-sm:text-md">
+              <div
+                className={`text-xl px-14 max-sm:text-md ${getTextColor(
+                  letter.photo
+                )}`}
+              >
+                {letter.name}
+              </div>
+              <div
+                className={`text-xl px-14 max-sm:text-md ${getTextColor(
+                  letter.photo
+                )}`}
+              >
                 from {letter.city}
               </div>
             </div>
@@ -34,13 +44,13 @@ export const Results = () => {
               onClick={() => deleteLetter(delet.id)}
               className=" bg-black text-white cursor-pointer p-3 font-providence uppercase disabled:bg-opacity-25 disabled:cursor-not-allowed transition-colors rounded-xl"
             >
-              Other
+              Back to Main Page
             </button>
             <button
-              onClick={handleDownloadImage} // Optionally add image download logic
+              onClick={handleDownloadImage} 
               className=" bg-black text-white cursor-pointer p-3 font-providence uppercase disabled:bg-opacity-25 disabled:cursor-not-allowed transition-colors rounded-xl"
             >
-              Share
+              Download
             </button>
           </div>
         ))}

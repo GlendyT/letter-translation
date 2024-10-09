@@ -1,3 +1,4 @@
+import { useEffect, useState } from "react";
 import { useLetterStore } from "../store";
 
 export const ShowModal = () => {
@@ -11,6 +12,7 @@ export const ShowModal = () => {
     setHasSubmitted,
     setShowModal,
   } = useLetterStore();
+  const [showErrorMessage, setShowErrorMessage] = useState(false);
 
   const generateWordDisplay = () => {
     return isCorrectGuess ? currWord : "_".repeat(currWord.length).trim();
@@ -22,10 +24,25 @@ export const ShowModal = () => {
       return;
     }
     const guessedWord = input.toLowerCase();
-    setIsCorrectGuess(guessedWord === currWord.toLowerCase());
+    const correct = guessedWord === currWord.toLowerCase();
+    setIsCorrectGuess(correct);
     setHasSubmitted(true);
     setInput("");
+
+    if (!correct) {
+      setShowErrorMessage(true);
+    }
   };
+
+  useEffect(() => {
+    if (showErrorMessage) {
+      const timer = setTimeout(() => {
+        setShowErrorMessage(false);
+      }, 2000); // El mensaje desaparece después de 3 segundos
+
+      return () => clearTimeout(timer); // Limpiar el temporizador al desmontar o cuando cambie el estado
+    }
+  }, [showErrorMessage]);
 
   return (
     <>
@@ -47,6 +64,7 @@ export const ShowModal = () => {
             >
               <input
                 type="text"
+                maxLength={4}
                 placeholder="Write the correct word"
                 value={input}
                 onChange={(e) => setInput(e.target.value)}
@@ -59,10 +77,10 @@ export const ShowModal = () => {
             <div className="flex items-center justify-end p-4 rounded-b">
               {hasSubmitted && (
                 <div
-                  className={`text-white font-bold font-providence uppercase text-sm px-6 py-3 rounded shadow hover:shadow-lg outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150 ${
+                  className={`text-white font-bold font-providence uppercase text-sm rounded shadow hover:shadow-lg outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150 ${
                     isCorrectGuess
-                      ? "bg-emerald-500 active:bg-emerald-600"
-                      : " bg-red-600 active:bg-red-600 "
+                      ? "bg-emerald-500 active:bg-emerald-600 px-6 py-3 "
+                      : ""
                   }`}
                 >
                   {isCorrectGuess ? (
@@ -70,7 +88,15 @@ export const ShowModal = () => {
                       Access Granted! click Here
                     </button>
                   ) : (
-                    <p className="">Try Again</p>
+                    <>
+                      {showErrorMessage && (
+                        <>
+                          <button className="bg-red-600 active:bg-red-600 px-6 py-3">
+                            Wrong, Try Again
+                          </button>
+                        </>
+                      )}
+                    </>
                   )}
                 </div>
               )}
