@@ -2,7 +2,7 @@ interface Props {
   ver1D: string;
   ver2D: string;
   selectedPhoto: string;
-  setSelectedPhoto: (photo : string) => void
+  setSelectedPhoto: (photo: string) => void;
 }
 
 export const CardSelector = ({
@@ -13,7 +13,7 @@ export const CardSelector = ({
 }: Props) => {
   return (
     <div className="flex flex-col items-center justify-center text-black font-extrabold">
-      <label className="pt-4">Select your Card</label>
+      <label className="pt-4 ">Select your Card</label>
       <div className="py-2 flex flex-row justify-between max-sm:text-xs ">
         <label className="px-4 py-2 flex flex-row gap-4 cursor-pointer items-center justify-center">
           <input
@@ -24,11 +24,13 @@ export const CardSelector = ({
             className="hidden"
           />
           <span
-            className={`w-8 h-8 object-cover rounded ${
-              selectedPhoto === ver1D ? "ring-4 bg-black" : "bg-gray-400"
+            className={`w-8 h-6 object-cover rounded ${
+              selectedPhoto === ver1D
+                ? "ring-4 bg-black"
+                : "bg-gray-400 outline-gray-600 outline"
             }`}
           ></span>
-          1
+          Cute Version
         </label>
 
         <label className="px-4 py-2 flex flex-row gap-4 cursor-pointer items-center justify-center">
@@ -40,11 +42,13 @@ export const CardSelector = ({
             className="hidden"
           />
           <span
-            className={`w-8 h-8 object-cover rounded ${
-              selectedPhoto === ver2D ? "ring-4 bg-black" : "bg-gray-400"
+            className={`w-8 h-6 object-cover rounded ${
+              selectedPhoto === ver2D
+                ? "ring-4 bg-black"
+                : "bg-gray-400 outline-gray-600 outline"
             }`}
           ></span>
-          2
+          Boyfriend Version
         </label>
       </div>
     </div>
