@@ -1,9 +1,8 @@
-
 export type DedicateFrom = {
   id: string;
   name: string;
   city: string;
-  photo: string[]
+  photo: string[];
 };
 
 export type DraftDedicateFrom = Omit<DedicateFrom, "id">;
@@ -14,4 +13,8 @@ export type Modal = {
   isCorrectGuess: boolean;
   hasSubmitted: boolean;
   showModal: boolean;
+  maxCharLimit: number;
+  maxFromLimit: number;
+  charCount: number
+  charCountFrom: number
 };

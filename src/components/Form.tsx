@@ -15,9 +15,9 @@ export const Form = () => {
     setSelectedPhoto,
     isMobile,
     charCount,
+    charCountFrom,
     maxCharLimit,
     maxFromLimit,
-    charCountFrom,
   } = useUtils();
 
   const { addName } = useLetterStore();
@@ -45,7 +45,7 @@ export const Form = () => {
               {isMaxFromLimitReached && (
                 <span className="text-red-500">Too long!</span>
               )}{" "}
-              {charCountFrom}/12
+              {charCountFrom}/15
             </div>
             <input
               placeholder="Your Name"
@@ -65,7 +65,7 @@ export const Form = () => {
               {isMaxCharLimitReached && (
                 <span className="text-red-500">Too long!</span>
               )}{" "}
-              {charCount}/14
+              {charCount}/20
             </div>
             <input
               placeholder="Your City or Country"
