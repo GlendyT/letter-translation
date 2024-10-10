@@ -1,48 +1,14 @@
-import { useEffect, useState } from "react";
 import { useLetterStore } from "../store";
+import { useUtils } from "../hooks/useUtils";
 
 export const ShowModal = () => {
+  const { input, isCorrectGuess, setInput } = useLetterStore();
   const {
-    currWord,
-    input,
-    isCorrectGuess,
-    hasSubmitted,
-    setInput,
-    setIsCorrectGuess,
-    setHasSubmitted,
-    setShowModal,
-  } = useLetterStore();
-  const [showErrorMessage, setShowErrorMessage] = useState(false);
-
-  const generateWordDisplay = () => {
-    return isCorrectGuess ? currWord : "_".repeat(currWord.length).trim();
-  };
-
-  const handleSubmit = (e: { preventDefault: () => void }) => {
-    e.preventDefault();
-    if (!input) {
-      return;
-    }
-    const guessedWord = input.toLowerCase();
-    const correct = guessedWord === currWord.toLowerCase();
-    setIsCorrectGuess(correct);
-    setHasSubmitted(true);
-    setInput("");
-
-    if (!correct) {
-      setShowErrorMessage(true);
-    }
-  };
-
-  useEffect(() => {
-    if (showErrorMessage) {
-      const timer = setTimeout(() => {
-        setShowErrorMessage(false);
-      }, 2000); // El mensaje desaparece después de 3 segundos
-
-      return () => clearTimeout(timer); // Limpiar el temporizador al desmontar o cuando cambie el estado
-    }
-  }, [showErrorMessage]);
+    generateWordDisplay,
+    handleSubmit,
+    handleCheckCorrectWord,
+    showErrorMessage,
+  } = useUtils();
 
   return (
     <>
@@ -58,10 +24,7 @@ export const ShowModal = () => {
                 {generateWordDisplay()}
               </p>
             </div>
-            <form
-              onSubmit={handleSubmit}
-              className="flex items-center justify-center"
-            >
+            <form className="flex items-center justify-center">
               <input
                 type="text"
                 maxLength={4}
@@ -73,32 +36,23 @@ export const ShowModal = () => {
                 }`}
               />
             </form>
-
             <div className="flex items-center justify-end p-4 rounded-b">
-              {hasSubmitted && (
-                <div
-                  className={`text-white font-bold font-providence uppercase text-sm rounded shadow hover:shadow-lg outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150 ${
-                    isCorrectGuess
-                      ? "bg-emerald-500 active:bg-emerald-600 px-6 py-3 "
-                      : ""
-                  }`}
+              {isCorrectGuess ? (
+                <button
+                  className="bg-emerald-500 active:bg-emerald-600 px-6 py-3 text-white font-bold"
+                  onClick={handleCheckCorrectWord}
                 >
-                  {isCorrectGuess ? (
-                    <button onClick={() => setShowModal(false)}>
-                      Access Granted! click Here
-                    </button>
-                  ) : (
-                    <>
-                      {showErrorMessage && (
-                        <>
-                          <button className="bg-red-600 active:bg-red-600 px-6 py-3">
-                            Wrong, Try Again
-                          </button>
-                        </>
-                      )}
-                    </>
-                  )}
-                </div>
+                  Access Granted! Click Here
+                </button>
+              ) : (
+                <button
+                  className={`bg-purple-500 px-6 py-3 text-white font-bold transition-colors delay-75 ${
+                    showErrorMessage ? "bg-red-500" : "bg-purple-900"
+                  }`}
+                  onClick={handleSubmit}
+                >
+                  {showErrorMessage ? "Wrong, Try Again" : "Submit Guess"}
+                </button>
               )}
             </div>
           </div>

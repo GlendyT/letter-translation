@@ -1,7 +1,9 @@
 import {
   ChangeEvent,
+  ChangeEventHandler,
   createContext,
   Dispatch,
+  MouseEventHandler,
   ReactNode,
   SetStateAction,
   useEffect,
@@ -12,8 +14,8 @@ import { useLetterStore } from "../store";
 import { CARDDESCKTOP, CARDPHONE } from "../utils/utils";
 
 type UtilsContextType = {
-  handleTextInput1: (e: ChangeEvent<HTMLInputElement>) => void;
-  handleTextInput2: (e: ChangeEvent<HTMLInputElement>) => void;
+  handleTextInput1: ChangeEventHandler<HTMLInputElement>;
+  handleTextInput2: ChangeEventHandler<HTMLInputElement>;
   handleResize: () => void;
   isMaxCharLimitReached: boolean;
   isMaxFromLimitReached: boolean;
@@ -25,7 +27,11 @@ type UtilsContextType = {
   maxCharLimit: number;
   maxFromLimit: number;
   canvasRef: React.MutableRefObject<HTMLCanvasElement | null>;
-  getTextColor: (photo: string[]) => void
+  getTextColor: (photo: string[]) => void;
+  generateWordDisplay: () => string;
+  handleSubmit: MouseEventHandler<HTMLButtonElement>;
+  handleCheckCorrectWord: MouseEventHandler<HTMLButtonElement>;
+  showErrorMessage: boolean;
 };
 
 type UtilsProviderProps = {
@@ -35,14 +41,29 @@ type UtilsProviderProps = {
 export const UtilsContext = createContext<UtilsContextType>(null!);
 
 export const UtilsProvider = ({ children }: UtilsProviderProps) => {
-  const { letters } = useLetterStore();
+  const {
+    letters,
+    maxCharLimit,
+    maxFromLimit,
+    currWord,
+    input,
+    isCorrectGuess,
+    setInput,
+    setIsCorrectGuess,
+    setHasSubmitted,
+    setShowModal,
+    charCount,
+    charCountFrom,
+    setCharCount,
+    setCharCountFrom,
+  } = useLetterStore();
   //TODO: UTILS TO USE IN THE FORM COMPONENT
-  const [charCount, setCharCount] = useState(0);
-  const [charCountFrom, setCharCountFrom] = useState(0);
+  // const [charCount, setCharCount] = useState(0);
+  // const [charCountFrom, setCharCountFrom] = useState(0);
   const [isMobile, setIsMobile] = useState<boolean>(false);
-  const maxCharLimit = 15;
-  const maxFromLimit = 13;
   const [selectedPhoto, setSelectedPhoto] = useState<string>("");
+  const [showErrorMessage, setShowErrorMessage] = useState<boolean>(false);
+  const canvasRef = useRef<HTMLCanvasElement | null>(null);
 
   const handleResize = () => {
     setIsMobile(window.innerWidth <= 768);
@@ -67,7 +88,6 @@ export const UtilsProvider = ({ children }: UtilsProviderProps) => {
   const isMaxFromLimitReached = charCountFrom === maxFromLimit;
 
   //TODO: UTILS TO USE IN THE RESULT COMPONENT
-  const canvasRef = useRef<HTMLCanvasElement | null>(null);
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -113,6 +133,48 @@ export const UtilsProvider = ({ children }: UtilsProviderProps) => {
       return "text-[rgb(188,79,77)]";
   };
 
+  //TODO: UTILS FROM THE SHOW MODAL
+
+  const generateWordDisplay = () => {
+    return isCorrectGuess ? currWord : "_".repeat(currWord.length).trim();
+  };
+
+  const handleSubmit = () => {
+    if (!input) {
+      return;
+    }
+    const guessedWord = input.toLowerCase();
+    const correct = guessedWord === currWord.toLowerCase();
+    setIsCorrectGuess(correct);
+    setHasSubmitted(true);
+    setInput("");
+
+    if (!correct) {
+      setShowErrorMessage(true);
+    } else {
+      setShowErrorMessage(false);
+    }
+  };
+
+  useEffect(() => {
+    if (showErrorMessage) {
+      const timer = setTimeout(() => {
+        setShowErrorMessage(false);
+      }, 2000); // El mensaje desaparece después de 3 segundos
+
+      return () => clearTimeout(timer); // Limpiar el temporizador al desmontar o cuando cambie el estado
+    }
+  }, [showErrorMessage]);
+
+  const handleCheckCorrectWord = () => {
+    if (!isCorrectGuess) {
+      setShowErrorMessage(true);
+    } else {
+      setShowModal(false);
+      setHasSubmitted(true);
+      setShowErrorMessage(false);
+    }
+  };
 
   return (
     <UtilsContext.Provider
@@ -130,7 +192,11 @@ export const UtilsProvider = ({ children }: UtilsProviderProps) => {
         maxFromLimit,
         charCountFrom,
         canvasRef,
-        getTextColor
+        getTextColor,
+        generateWordDisplay,
+        handleSubmit,
+        handleCheckCorrectWord,
+        showErrorMessage,
       }}
     >
       {children}
