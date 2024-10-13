@@ -16,18 +16,18 @@ export const Results = () => {
             <div
               key={letter.id}
               className={`absolute inset-0 flex flex-col font-extrabold font-providence items-center justify-end shadow-2xl ${
-                isMobile ? "pb-20" : "pb-14"
+                isMobile ? "pb-20" : "pb-16"
               }`}
             >
               <div
-                className={`text-xl px-14 max-sm:text-md ${getTextColor(
+                className={`text-lg px-14 max-sm:text-md ${getTextColor(
                   letter.photo
                 )}`}
               >
                 {letter.name}
               </div>
               <div
-                className={`text-xl px-14 max-sm:text-md ${getTextColor(
+                className={`text-lg px-14 max-sm:text-md ${getTextColor(
                   letter.photo
                 )}`}
               >
