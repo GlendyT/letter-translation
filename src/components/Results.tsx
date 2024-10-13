@@ -16,7 +16,7 @@ export const Results = () => {
             <div
               key={letter.id}
               className={`absolute inset-0 flex flex-col font-extrabold font-providence items-center justify-end shadow-2xl ${
-                isMobile ? "pb-20" : "pb-16"
+                isMobile ? "pb-20" : "pb-[4.5rem]"
               }`}
             >
               <div
